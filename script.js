@@ -39,6 +39,21 @@ function criarBotoes(content){
     ).appendTo(content);
 }
 
+function popularSelect(arrayItens, obj){
+    arrayItens.forEach((item) => {
+        obj.append(`<option value="${item.toLowerCase()}">` + item + '</option>');
+    })
+}
+
+function adicionarSelect(content, id, label){
+    $('<div class="form-group">'+
+    `<label>${label}</label>`+
+    `<select class="form-control" id="${id}">`+
+        '<option value="" disabled selected>Selecione...</option>'+
+    '</select>'+
+    '</div>').appendTo(content);
+}
+
 function formularioClasse(content) {
     $('<h1>Classe</h1>').appendTo(content);
     $('<div class="form-group"><label for="nomeClasse">Nome</label><input type="text" class="form-control" id="nomeClasse"></div>').appendTo(content);
@@ -61,6 +76,17 @@ function formularioTitulo(content) {
     $('<div class="form-group"><label for="nomeTitulo">Nome</label><input type="text" class="form-control" id="nomeTitulo"></div>').appendTo(content);
     $('<div class="form-group"><label for="categoria">Categoria</label><input type="text" class="form-control" id="categoria"></div>').appendTo(content);
     $('<div class="form-group"><label for="sinopse">Sinópse</label><textarea class="form-control" id="sinopse" rows="3"></textarea></div>').appendTo(content);
+    adicionarSelect(content, "selectClasse", "Classe");
+    adicionarSelect(content, 'selectDiretor', 'Diretor');
+
+    var selectClasse = $('#selectClasse');
+    var selectDiretor = $('#selectDiretor');
+    var listaClasse = ['Classe 1', 'Classe 2'];
+    var listaDiretor = ['Igor Pulini', 'Victório Albani', 'Tua Mãe'];
+
+    popularSelect(listaClasse, selectClasse);
+    popularSelect(listaDiretor, selectDiretor);
+
 }
 
 function formularioItem(content) {
@@ -68,4 +94,9 @@ function formularioItem(content) {
     $('<div class="form-group"><label for="numSerie">Número de Série</label><input type="number" class="form-control" id="numSerie"></div>').appendTo(content);
     $('<div class="form-group"><label for="dtAquisicao">Data de aquisição</label><input type="date" class="form-control" id="dtAquisicao"></div>').appendTo(content);
     $('<div class="form-group"><label for="tpItem">Tipo</label><input type="text" class="form-control" id="tpItem"></div>').appendTo(content);
+    adicionarSelect(content, "selectTitulo", "Título");
+
+    var select = $('#selectTitulo');
+    var arrayItens = ['Diario de um Banana', 'Apocalipse', 'A Arte da Guerra'];
+    popularSelect(arrayItens, select);
 }
