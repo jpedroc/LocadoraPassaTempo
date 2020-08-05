@@ -10,23 +10,21 @@
 <body>
     
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <a class="navbar-brand">Locadora Passa-Tempo</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <span class="navbar-brand mb-0 h1">Locadora Passa-Tempo</span>
+
+        <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" onclick="gerarFormulario('ator')" href="#">Ator <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="gerarFormulario('classe')" href="#">Classe <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="gerarFormulario('diretor')" href="#">Diretor <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="gerarFormulario('titulo')" href="#">Título <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="gerarFormulario('item')" href="#">Item <span class="sr-only">(current)</span></a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="dropAcervo" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Controle do Acervo
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropAcervo">
+                        <a class="dropdown-item" onclick="gerarFormulario('ator')" href="#">Ator</a>
+                        <a class="dropdown-item" onclick="gerarFormulario('classe')" href="#">Classe</a>
+                        <a class="dropdown-item" onclick="gerarFormulario('diretor')" href="#">Diretor</a>
+                        <a class="dropdown-item" onclick="gerarFormulario('titulo')" href="#">Título</a>
+                        <a class="dropdown-item" onclick="gerarFormulario('item')" href="#">Item</a>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -36,6 +34,7 @@
     </form>
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>
 </html>

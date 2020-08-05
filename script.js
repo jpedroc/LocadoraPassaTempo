@@ -76,16 +76,22 @@ function formularioTitulo(content) {
     $('<div class="form-group"><label for="nomeTitulo">Nome</label><input type="text" class="form-control" id="nomeTitulo"></div>').appendTo(content);
     $('<div class="form-group"><label for="categoria">Categoria</label><input type="text" class="form-control" id="categoria"></div>').appendTo(content);
     $('<div class="form-group"><label for="sinopse">Sinópse</label><textarea class="form-control" id="sinopse" rows="3"></textarea></div>').appendTo(content);
+    
     adicionarSelect(content, "selectClasse", "Classe");
     adicionarSelect(content, 'selectDiretor', 'Diretor');
 
+    $('<div class="form-group"><label>Atores</label><select multiple class="form-control" id="multiselectAtor"></select></div>').appendTo(content);
+
     var selectClasse = $('#selectClasse');
     var selectDiretor = $('#selectDiretor');
+    var selectAtor = $('#multiselectAtor');
     var listaClasse = ['Classe 1', 'Classe 2'];
     var listaDiretor = ['Igor Pulini', 'Victório Albani', 'Tua Mãe'];
+    var listaAtores = ['Flavio', 'Marlon', 'Luiz', 'Diego', 'Eduardo', 'Robinho', 'Rosa'];
 
     popularSelect(listaClasse, selectClasse);
     popularSelect(listaDiretor, selectDiretor);
+    popularSelect(listaAtores, selectAtor);
 
 }
 
