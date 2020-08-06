@@ -21,6 +21,9 @@ function gerarFormulario(obj) {
             case 'item':
                 formularioItem();
                 break;
+            case 'cliente':
+                formularioCliente();
+                break;
         }
         criarBotoes();
     }();
@@ -109,6 +112,25 @@ function formularioItem() {
     var select = $('#selectTitulo');
     var arrayItens = ['Diario de um Banana', 'Apocalipse', 'A Arte da Guerra'];
     popularSelect(arrayItens, select);
+}
+
+function formularioCliente(){
+    $('<h1>Cadastro Cliente</h1>').appendTo(content);
+    $('<div class="form-group"><label for="numInscricao">Número de Inscrição</label><input type="number" class="form-control" id="numInscricao"></div>').appendTo(content);
+    $('<div class="form-group"><label for="nomeCliente">Nome</label><input type="text" class="form-control" id="nomeCliente"></div>').appendTo(content);
+    $('<div class="form-group"><label for="dtNascimento">Data de nascimento</label><input type="date" class="form-control" id="dtNascimento"></div>').appendTo(content);
+    $('<div class="form-group"><label for="estaAtivo">Está ativo?</label><input type="checkbox" class="form-control" id="estaAtivo"></div>').appendTo(content);
+    adicionarSelect('selectSexo', 'Sexo');
+    $('<div class="form-group"><label for="isSocio">Sócio</label><input type="checkbox" class="form-control" id="isSocio"></div>').appendTo(content);
+    $('<div class="form-group"><label for="cpf">CPF</label><input type="number" class="form-control" id="cpf"></div>').appendTo(content);
+    $('<div class="form-group"><label for="endereco">Endereço</label><input type="text" class="form-control" id="endereco"></div>').appendTo(content);
+    $('<div class="form-group"><label for="tel">Telefone</label><input type="tel" class="form-control" id="tel"></div>').appendTo(content);
+
+    $('<div class="form-group"><label>Dependentes</label><select multiple class="form-control" id="multiselectDependentes"></select></div>').appendTo(content);
+    
+    popularSelect(['Masculino', 'Feminino', 'Outros'], $('#selectSexo'));
+    popularSelect(['João Pedro', 'Kaio Binda', 'Arthur', 'Chrystian', 'Jean', 'Alisson'], $('#multiselectDependentes'));
+    
 }
 
 function getValue(){
