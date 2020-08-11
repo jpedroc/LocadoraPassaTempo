@@ -38,7 +38,7 @@ function limparFormulário(obj){
 function criarBotoes(){
     $('<div class="divBotoes">'+
     '<button type="button" id="btnExcluir" onclick="excluirObj()" class="btn btn-secondary">Excluir</button>'+
-    '<button type="button" id="btnBuscar" class="btn btn-warning">Buscar</button>'+
+    '<button type="button" id="btnBuscar" onclick="buscarObj()" class="btn btn-warning">Buscar</button>'+
     '<button type="button" id="btnCancelar" onclick="limparCampos()" class="btn btn-danger">Cancelar</button>'+
     '<button type="button" id="btnSalvar" onclick="validar()" class="btn btn-success">Salvar</button>'+
     '</div>'
@@ -62,39 +62,39 @@ function adicionarSelect(id, label){
 
 function formularioClasse() {
     $('<h1>Classe</h1>').appendTo(content);
-    $('<div class="form-group"><label for="idClasse">ID</label><input name="idClasse" type="number" class="form-control" id="idClasse"></div>').appendTo(content);
-    $('<div class="form-group"><label for="nomeClasse">Nome</label><input name="nomeClasse" type="text" class="form-control" id="nomeClasse"></div>').appendTo(content);
+    $('<div class="form-group"><label for="idClasse">ID</label><input name="idClasse" type="number" class="form-control" id="id"></div>').appendTo(content);
+    $('<div class="form-group"><label for="nomeClasse">Nome</label><input name="nomeClasse" type="text" class="form-control" id="nome"></div>').appendTo(content);
     $('<div class="form-group"><label for="valorClasse">Valor</label><input name="valorClasse" type="number" class="form-control" id="valorClasse"></div>').appendTo(content);
     $('<div class="form-group"><label for="prazoDevolucao">Prazo para devolução</label><input name="prazoClasse" type="number" class="form-control" id="prazoDevolucao"></div>').appendTo(content);
 }
 
 function formularioAtor() {
     $('<h1>Ator</h1>').appendTo(content);
-    $('<div class="form-group"><label for="idAtor">ID</label><input type="number" name="idAtor" class="form-control" id="idAtor"></div>').appendTo(content);
-    $('<div class="form-group"><label for="nomeAtor">Nome</label><input type="text" name="nomeAtor" class="form-control" id="nomeAtor"></div>').appendTo(content);
+    $('<div class="form-group"><label for="idAtor">ID</label><input type="number" name="id" class="form-control" id="id"></div>').appendTo(content);
+    $('<div class="form-group"><label for="nomeAtor">Nome</label><input type="text" name="nome" class="form-control" id="nome"></div>').appendTo(content);
 }
 
 function formularioDiretor() {
     $('<h1>Direto</h1>').appendTo(content);
-    $('<div class="form-group"><label for="idDiretor">ID</label><input name="idDiretor" type="number" class="form-control" id="idDiretor"></div>').appendTo(content);
-    $('<div class="form-group"><label for="nomeDiretor">Nome</label><input name="nomeDiretor" type="text" class="form-control" id="nomeDiretor"></div>').appendTo(content);
+    $('<div class="form-group"><label for="idDiretor">ID</label><input name="idDiretor" type="number" class="form-control" id="id"></div>').appendTo(content);
+    $('<div class="form-group"><label for="nomeDiretor">Nome</label><input name="nomeDiretor" type="text" class="form-control" id="nome"></div>').appendTo(content);
 }
 
 function formularioTitulo() {
     $('<h1>Título</h1>').appendTo(content);
-    $('<div class="form-group"><label for="idTitulo">ID</label><input name="idTitulo" type="number" class="form-control" id="idTitulo"></div>').appendTo(content);
-    $('<div class="form-group"><label for="nomeTitulo">Nome</label><input name="nomeTitulo" type="text" class="form-control" id="nomeTitulo"></div>').appendTo(content);
+    $('<div class="form-group"><label for="idTitulo">ID</label><input name="idTitulo" type="number" class="form-control" id="id"></div>').appendTo(content);
+    $('<div class="form-group"><label for="nomeTitulo">Nome</label><input name="nomeTitulo" type="text" class="form-control" id="nome"></div>').appendTo(content);
     $('<div class="form-group"><label for="categoria">Categoria</label><input name="categoria" type="text" class="form-control" id="categoria"></div>').appendTo(content);
     $('<div class="form-group"><label for="sinopse">Sinópse</label><textarea name="sinopse" class="form-control" id="sinopse" rows="3"></textarea></div>').appendTo(content);
     
-    adicionarSelect("selectClasse", "Classe");
-    adicionarSelect('selectDiretor', 'Diretor');
+    adicionarSelect("classe", "Classe");
+    adicionarSelect('diretor', 'Diretor');
 
-    $('<div class="form-group"><label>Atores</label><select name="atores" multiple class="form-control" id="multiselectAtor"></select></div>').appendTo(content);
+    $('<div class="form-group"><label>Atores</label><select name="atores" multiple class="form-control" id="atores"></select></div>').appendTo(content);
 
-    var selectClasse = $('#selectClasse');
-    var selectDiretor = $('#selectDiretor');
-    var selectAtor = $('#multiselectAtor');
+    var selectClasse = $('#classe');
+    var selectDiretor = $('#diretor');
+    var selectAtor = $('#atores');
     var listaClasse = JSON.parse(localStorage.getItem('classe'));
     var listaDiretor = JSON.parse(localStorage.getItem('diretor'));
     var listaAtores = JSON.parse(localStorage.getItem('ator'));
@@ -107,12 +107,12 @@ function formularioTitulo() {
 
 function formularioItem() {
     $('<h1>Item</h1>').appendTo(content);
-    $('<div class="form-group"><label for="numSerie">Número de Série</label><input name="numSerie" type="number" class="form-control" id="numSerie"></div>').appendTo(content);
+    $('<div class="form-group"><label for="id">Número de Série</label><input name="numSerie" type="number" class="form-control" id="id"></div>').appendTo(content);
     $('<div class="form-group"><label for="dtAquisicao">Data de aquisição</label><input name="dataAquisicao" type="date" class="form-control" id="dtAquisicao"></div>').appendTo(content);
     $('<div class="form-group"><label for="tpItem">Tipo</label><input type="text" name="tipoItem" class="form-control" id="tpItem"></div>').appendTo(content);
-    adicionarSelect("selectTitulo", "Título");
+    adicionarSelect("titulo", "Título");
 
-    var select = $('#selectTitulo');
+    var select = $('#titulo');
     var arrayItens = JSON.parse(localStorage.getItem('titulo'));
     popularSelect(arrayItens, select);
 }
@@ -199,49 +199,49 @@ function getValue(){
 
 function getTituloValue() {
     const ator = {
-        id:$('#idTitulo').val(),
-        nome:$('#nomeTitulo').val(),
+        id:$('#id').val(),
+        nome:$('#nome').val(),
         categoria:$('#categoria').val(),
         sinopse:$('#sinopse').val(),
-        classe:buscarPorId($('#selectClasse').val(), 'classe'),
-        diretor:buscarPorId($('#selectDiretor').val(), 'diretor'),
-        atores:buscarLista($('#multiselectAtor').val(), 'ator')
+        classe:buscarPorId($('#classe').val(), 'classe'),
+        diretor:buscarPorId($('#diretor').val(), 'diretor'),
+        atores:buscarLista($('#atores').val(), 'ator')
     }
     return ator;
 }
 
 function getAtorValue(){
     var ator = {
-        id: $('#idAtor').val(),
-        nome: $('#nomeAtor').val()
+        id: $('#id').val(),
+        nome: $('#nome').val()
     }
     return ator;
 }
 
 function getDiretorValue(){
     const diretor = {
-        id: $('#idDiretor').val(),
-        nome:$('#nomeDiretor').val()
+        id: $('#id').val(),
+        nome:$('#nome').val()
     }
     return diretor;
 }
 
 function getClasseValue(){
     const classe = {
-        id:$('#idClasse').val(),
-        nome:$('#nomeClasse').val(),
+        id:$('#id').val(),
+        nome:$('#nome').val(),
         valorClasse:$('#valorClasse').val(),
-        prazo:$('#prazoDevolucao').val()
+        prazoDevolucao:$('#prazoDevolucao').val()
     }
     return classe;
 }
 
 function getItemValue(){
     const item = { 
-        id: $('#numSerie').val(),
-        dataAquisicao: $('#dtAquisicao').val(),
-        tipoItem: $('#tpItem').val(),
-        titulo: buscarPorId($('#selectTitulo').val(), 'titulo')
+        id: $('#id').val(),
+        dtAquisicao: $('#dtAquisicao').val(),
+        tpItem: $('#tpItem').val(),
+        titulo: buscarPorId($('#titulo').val(), 'titulo')
     }
     return item;
 }
@@ -269,11 +269,39 @@ function excluirObj(){
         return element.id == obj.id;
     })
 
-    var pos = vetor.indexOf(obj);
-    if(pos != -1){
-        vetor.splice(pos, 1);
-    }
+    var apagar = confirm('Deseja realmente excluir este registro?');
+    if (apagar){
+        var pos = vetor.indexOf(obj);
+        if(pos != -1){
+            vetor.splice(pos, 1);
+        }			
+        limparCampos();
+    }else{
+        event.preventDefault();
+    }	
 
     localStorage.setItem(formAtual, JSON.stringify(vetor));
+}
+
+function preencherFormulario(obj){
+    Object.keys(obj).forEach(function(item){
+        if(obj[item].id){
+            $(`#${item} option:contains(${obj[item].nome})`).prop('selected', true);
+        }
+        else if(Array.isArray(obj[item])){
+            obj[item].forEach(element => {
+                $(`#${item} option:contains(${element.nome})`).prop('selected', true);
+            })
+        }
+        else {
+            $(`#${item}`).val(obj[item]);
+        }
+    });
+}
+
+function buscarObj(){
+    var obj = $('#id').val();
+    obj = buscarPorId(obj, formAtual);
+    preencherFormulario(obj);
 }
 
