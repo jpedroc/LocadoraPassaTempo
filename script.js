@@ -36,8 +36,8 @@ function limparFormulário(obj){
 
 function criarBotoes(){
     $('<div class="divBotoes">'+
-    '<button type="button" class="btn btn-danger">Cancelar</button>'+
-    '<button type="button" onclick="getValue()" class="btn btn-success">Salvar</button>'+
+    '<button type="button" id="btnCancelar" class="btn btn-danger">Cancelar</button>'+
+    '<button type="button" id="btnSalvar" onclick="salvarObj()" class="btn btn-success">Salvar</button>'+
     '</div>'
     ).appendTo(content);
 }
@@ -114,82 +114,107 @@ function formularioItem() {
     popularSelect(arrayItens, select);
 }
 
+function getVetorLS(){
+    return JSON.parse(localStorage.getItem(formAtual)) ? JSON.parse(localStorage.getItem(formAtual)) : [];  
+}
+
+function salvarObj(){
+    const vetor = getVetorLS();
+
+    vetor.push(getValue());
+
+    localStorage.setItem(formAtual, JSON.stringify(vetor));
+}
+
+function valorCheck(){
+    $('#formSocio :input').prop("disabled", !($('#isSocio').is(':checked')));
+}
+
+function limitarDependente(){
+    var total = $('#multiselectDependentes :selected').length;
+
+    return total > 3 ?  $('#btnSalvar').prop('disabled', true) : $('#btnSalvar').prop('disabled', false);;
+}
+
 function formularioCliente(){
     $('<h1>Cadastro Cliente</h1>').appendTo(content);
     $('<div class="form-group"><label for="numInscricao">Número de Inscrição</label><input type="number" class="form-control" id="numInscricao"></div>').appendTo(content);
     $('<div class="form-group"><label for="nomeCliente">Nome</label><input type="text" class="form-control" id="nomeCliente"></div>').appendTo(content);
     $('<div class="form-group"><label for="dtNascimento">Data de nascimento</label><input type="date" class="form-control" id="dtNascimento"></div>').appendTo(content);
-    $('<div class="form-group"><label for="estaAtivo">Está ativo?</label><input type="checkbox" class="form-control" id="estaAtivo"></div>').appendTo(content);
     adicionarSelect('selectSexo', 'Sexo');
-    $('<div class="form-group"><label for="isSocio">Sócio</label><input type="checkbox" class="form-control" id="isSocio"></div>').appendTo(content);
-    $('<div class="form-group"><label for="cpf">CPF</label><input type="number" class="form-control" id="cpf"></div>').appendTo(content);
-    $('<div class="form-group"><label for="endereco">Endereço</label><input type="text" class="form-control" id="endereco"></div>').appendTo(content);
-    $('<div class="form-group"><label for="tel">Telefone</label><input type="tel" class="form-control" id="tel"></div>').appendTo(content);
-
-    $('<div class="form-group"><label>Dependentes</label><select multiple class="form-control" id="multiselectDependentes"></select></div>').appendTo(content);
+    $('<div class="form-group"><label for="estaAtivo">Está ativo?</label><input type="checkbox" class="form-control" id="estaAtivo"></div>').appendTo(content);
+    $('<div class="form-group"><label for="isSocio">Sócio</label><input onclick="valorCheck()" type="checkbox" class="form-control" id="isSocio"></div>').appendTo(content);
+    
+    $('<form id="formSocio"><div class="form-group"><label for="cpf">CPF</label><input type="number" class="form-control" id="cpf"></div>'+
+    '<div class="form-group"><label for="endereco">Endereço</label><input type="text" class="form-control" id="endereco"></div>' +
+    '<div class="form-group"><label for="tel">Telefone</label><input type="tel" class="form-control" id="tel"></div>' +
+    '<div class="form-group"><label>Dependentes</label><select onchange="limitarDependente()" multiple class="form-control" id="multiselectDependentes"></select></div></form>').appendTo(content);
     
     popularSelect(['Masculino', 'Feminino', 'Outros'], $('#selectSexo'));
     popularSelect(['João Pedro', 'Kaio Binda', 'Arthur', 'Chrystian', 'Jean', 'Alisson'], $('#multiselectDependentes'));
-    
+    valorCheck();
 }
 
 function getValue(){
     switch(formAtual){
         case 'ator':
-            getAtorValue();
-            break;
+            return getAtorValue();
         case 'classe':
-            getClasseValue();
-            break;
+            return getClasseValue();
         case 'diretor':
-            getDiretorValue();
-            break;
+            return getDiretorValue();
         case 'item':
-            getItemValue();
-            break;
+            return getItemValue();
         case 'titulo':
-            getTituloValue();
-            break;
+            return getTituloValue();      
     }
 }
 
 function getTituloValue() {
-    var id = $('#idTitulo').val();
-    var nome = $('#nomeTitulo').val();
-    var categoria = $('#categoria').val();
-    var sinopse = $('#sinopse').val();
-    var classe = $('#selectClasse').val();
-    var diretor = $('#selectDiretor').val();
-    var atores = $('#multiselectAtor').val();
+    const ator = {
+        id:$('#idTitulo').val(),
+        nome:$('#nomeTitulo').val(),
+        categoria:$('#categoria').val(),
+        sinopse:$('#sinopse').val(),
+        classe:$('#selectClasse').val(),
+        diretor:$('#selectDiretor').val(),
+        atores:$('#multiselectAtor').val()
 
-    console.log({id, nome, categoria, sinopse, classe, diretor, atores});
+    }
+    return ator;
 }
 
 function getAtorValue(){
-    var id = $('#idAtor').val();
-    var nome = $('#nomeAtor').val();
-    console.log({idAtor:id, nomeAtor:nome});
+    var ator = {
+        id: $('#idAtor').val(),
+        nome: $('#nomeAtor').val()
+    }
+    return ator;
 }
 
 function getDiretorValue(){
-    var id = $('#idDiretor').val();
-    var nome = $('#nomeDiretor').val();
-    console.log({id, nome});
+    const diretor = {
+        id: $('#idDiretor').val(),
+        nome:$('#nomeDiretor').val()
+    }
+    return diretor;
 }
 
 function getClasseValue(){
-    var idClasse = $('#idClasse').val();
-    var nomeClasse = $('#nomeClasse').val();
-    var valorClasse = $('#valorClasse').val();
-    var prazo = $('#prazoDevolucao').val();
-
-    console.log({idClasse, nomeClasse, valorClasse, prazo});
+    const classe = {
+        idClasse:$('#idClasse').val(),
+        nomeClasse:$('#nomeClasse').val(),
+        valorClasse:$('#valorClasse').val(),
+        prazo:$('#prazoDevolucao').val()
+    }
+    return classe;
 }
 
 function getItemValue(){
-    var numSerie = $('#numSerie').val();
-    var dataAquisicao = $('#dtAquisicao').val();
-    var tipoItem = $('#tpItem').val();
-
-    console.log({numSerie, dataAquisicao, tipoItem});
+    const item = { 
+        numSerie: $('#numSerie').val(),
+        dataAquisicao: $('#dtAquisicao').val(),
+        tipoItem: $('#tpItem').val()
+    }
+    return item;
 }
