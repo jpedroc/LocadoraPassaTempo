@@ -37,7 +37,7 @@ function limparFormulário(obj){
 
 function criarBotoes(){
     $('<div class="divBotoes">'+
-    '<button type="button" id="btnExcluir" class="btn btn-secondary">Excluir</button>'+
+    '<button type="button" id="btnExcluir" onclick="excluirObj()" class="btn btn-secondary">Excluir</button>'+
     '<button type="button" id="btnBuscar" class="btn btn-warning">Buscar</button>'+
     '<button type="button" id="btnCancelar" onclick="limparCampos()" class="btn btn-danger">Cancelar</button>'+
     '<button type="button" id="btnSalvar" onclick="validar()" class="btn btn-success">Salvar</button>'+
@@ -259,5 +259,21 @@ function buscarLista(vetor, obj){
     })
 
     return vetorAux;
+}
+
+function excluirObj(){
+    var obj = getValue();
+    var vetor = JSON.parse(localStorage.getItem(formAtual));
+
+    obj = vetor.find(element => {
+        return element.id == obj.id;
+    })
+
+    var pos = vetor.indexOf(obj);
+    if(pos != -1){
+        vetor.splice(pos, 1);
+    }
+
+    localStorage.setItem(formAtual, JSON.stringify(vetor));
 }
 
