@@ -122,7 +122,7 @@ function getVetorLS(){
 }
 
 function tornarCamposObrigatorios(){
-    $('#form, :input').prop('required', true);
+    $('#form, :input').not(':input[type="checkbox"]').prop('required', true);
 }
 
 function validar(){
@@ -147,23 +147,23 @@ function salvarObj(){
 }
 
 function valorCheck(){
-
+    // $('#estaAtivo').prop('required', false);
+    // $('#isDependente').prop('required', false);
     $('#isDependente').is(':checked') ? 
         (function() {
             $('#formSocio :input')
                 .val('')
                 .prop('checked', false)
-                .prop('required', false)
-                .prop('selected', false);
-            $('#formSocio :input').prop("disabled", true);
+                .prop('selected', false)
+                .prop('disabled', true);
+            $('#formSocio, :input').prop('required', false);
             $('#socio').prop("disabled", false).prop("required", true);
         }()) 
         : 
         (function() {
-            $('#formSocio :input').prop("disabled", false);
-            $('#socio').prop("disabled", true).prop("required", false).val('');
+            $('#formSocio, :input').prop("disabled", false).prop("required", false);
+            $('#socio').prop("disabled", true).val('');
         }())
-
 }
 
 
@@ -176,18 +176,21 @@ function limparCampos(){
 
 function formularioCliente(){
     $('<h1>Cadastro Cliente</h1>').appendTo(content);
-    $('<div class="form-group"><label for="estaAtivo">Está ativo?</label><input type="checkbox" class="form-control" id="estaAtivo"></div>').appendTo(content);
-    $('<div class="form-group"><label for="numInscricao">Número de Inscrição</label><input type="number" class="form-control" id="id"></div>').appendTo(content);
-    $('<div class="form-group"><label for="nomeCliente">Nome</label><input type="text" class="form-control" id="nome"></div>').appendTo(content);
-    $('<div class="form-group"><label for="dtNascimento">Data de nascimento</label><input type="date" class="form-control" id="dtNascimento"></div>').appendTo(content);
+    $('<div class="form-group"><label for="estaAtivo">Está ativo?</label><input type="checkbox" name="estaAtivo" class="form-control" id="estaAtivo"></div>').appendTo(content);
+    $('<div class="form-group"><label for="id">Número de Inscrição</label><input type="number" name="id" class="form-control" id="id"></div>').appendTo(content);
+    $('<div class="form-group"><label for="nome">Nome</label><input type="text" class="form-control" name="estanomeAtivo" id="nome"></div>').appendTo(content);
+    $('<div class="form-group"><label for="dtNascimento">Data de nascimento</label><input type="date" name="dtNascimento" class="form-control" id="dtNascimento"></div>').appendTo(content);
     adicionarSelect('socio', 'Sócio')
     adicionarSelect('sexo', 'Sexo');
-    $('<div class="form-group"><label for="isDependente">Dependente?</label><input onclick="valorCheck()" type="checkbox" class="form-control" id="isDependente"></div>').appendTo(content);
+    $('<div class="form-group"><label for="isDependente">Dependente?</label><input onclick="valorCheck()" type="checkbox" class="form-control" name="isDependente" id="isDependente"></div>').appendTo(content);
     
-    $('<form id="formSocio"><div class="form-group"><label for="cpf">CPF</label><input type="number" class="form-control" id="cpf"></div>'+
-    '<div class="form-group"><label for="endereco">Endereço</label><input type="text" class="form-control" id="endereco"></div>' +
-    '<div class="form-group"><label for="tel">Telefone</label><input type="tel" class="form-control" id="tel"></div></form>').appendTo(content);
+    $('<div id="formSocio"><div class="form-group"><label for="cpf">CPF</label><input type="number" class="form-control" name="cpf" id="cpf"></div>'+
+    '<div class="form-group"><label for="endereco">Endereço</label><input type="text" class="form-control" name="endereco" id="endereco"></div>' +
+    '<div class="form-group"><label for="telefone">Telefone</label><input type="tel" class="form-control" name="telefone" id="telefone"></div></div>').appendTo(content);
     
+    var select = $('#socio');
+    var arrayItens = JSON.parse(localStorage.getItem('cliente'));
+    popularSelect(arrayItens, select);
     popularSelect([{id:'masculino', nome:'Masculino'}, {id:'feminino', nome:'Feminino'},{id:'outros', nome:'Outros'}], $('#sexo'));
     valorCheck();
 }
@@ -272,13 +275,12 @@ function getClienteValue(){
         estaAtivo: $('#estaAtivo').is(':checked'),
         isDependente: $('#ativo').is(':checked')
     }
-    console.log(cliente)
     return cliente;
 }
 
 function buscarPorId(id, obj){
     const vetor = JSON.parse(localStorage.getItem(obj));
-    return vetor.find(element => { return element.id == id});
+    return id ? vetor.find(element => { return element.id == id}) : null;
 }
 
 function buscarLista(vetor, obj){
@@ -314,18 +316,24 @@ function excluirObj(){
 }
 
 function preencherFormulario(obj){
+    
     Object.keys(obj).forEach(function(item){
-        if(obj[item].id){
-            $(`#${item} option:contains(${obj[item].nome})`).prop('selected', true);
-        }
-        else if(Array.isArray(obj[item])){
-            obj[item].forEach(element => {
-                $(`#${item} option:contains(${element.nome})`).prop('selected', true);
-            })
-        }
-        else {
-            $(`#${item}`).val(obj[item]);
-        }
+        obj[item] && function(){
+            if(obj[item].id){
+                $(`#${item} option:contains(${obj[item].id})`).prop('selected', true);
+            }
+            else if(typeof obj[item] === 'boolean'){
+                $(`#${item}`).prop('checked', obj[item]);
+            }
+            else if(Array.isArray(obj[item])){
+                obj[item].forEach(element => {
+                    $(`#${item} option:contains(${element.nome})`).prop('selected', true);
+                })
+            }
+            else {
+                $(`#${item}`).val(obj[item]);
+            }
+        }()
     });
 }
 
