@@ -24,11 +24,14 @@ function gerarFormulario(obj) {
             case 'cliente':
                 formularioCliente();
                 break;
+            case 'locacao':
+                formularioLocacao();
+                break;
         }
         tornarCamposObrigatorios();
+        formAtual = obj;
         criarBotoes();
     }();
-    formAtual = obj;
 }
 
 function limparFormulário(obj){
@@ -36,13 +39,15 @@ function limparFormulário(obj){
 }
 
 function criarBotoes(){
-    $('<div class="divBotoes">'+
-    '<button type="button" id="btnExcluir" onclick="excluirObj()" class="btn btn-secondary">Excluir</button>'+
-    '<button type="button" id="btnBuscar" onclick="buscarObj()" class="btn btn-warning">Buscar</button>'+
-    '<button type="button" id="btnCancelar" onclick="limparCampos()" class="btn btn-danger">Cancelar</button>'+
-    '<button type="button" id="btnSalvar" onclick="validar()" class="btn btn-success">Salvar</button>'+
-    '</div>'
-    ).appendTo(content);
+    (formAtual != 'locacao') && function(){
+        $('<div id="divBotoes" class="divBotoes">'+
+        '<button type="button" id="btnExcluir" onclick="excluirObj()" class="btn btn-secondary">Excluir</button>'+
+        '<button type="button" id="btnBuscar" onclick="buscarObj()" class="btn btn-warning">Buscar</button>'+
+        '<button type="button" id="btnCancelar" onclick="limparCampos()" class="btn btn-danger">Cancelar</button>'+
+        '<button type="button" id="btnSalvar" onclick="validar()" class="btn btn-success">Salvar</button>'+
+        '</div>'
+        ).appendTo(content);
+    }()
 }
 
 function popularSelect(arrayItens, obj){
@@ -51,13 +56,13 @@ function popularSelect(arrayItens, obj){
     })
 }
 
-function adicionarSelect(id, label){
+function adicionarSelect(id, label, div){
     $('<div class="form-group">'+
     `<label>${label}</label>`+
     `<select class="form-control" name="${id}" required id="${id}">`+
         '<option value="" disabled selected>Selecione...</option>'+
     '</select>'+
-    '</div>').appendTo(content);
+    '</div>').appendTo(div);
 }
 
 function formularioClasse() {
@@ -87,8 +92,8 @@ function formularioTitulo() {
     $('<div class="form-group"><label for="categoria">Categoria</label><input name="categoria" type="text" class="form-control" id="categoria"></div>').appendTo(content);
     $('<div class="form-group"><label for="sinopse">Sinópse</label><textarea name="sinopse" class="form-control" id="sinopse" rows="3"></textarea></div>').appendTo(content);
     
-    adicionarSelect("classe", "Classe");
-    adicionarSelect('diretor', 'Diretor');
+    adicionarSelect("classe", "Classe", content);
+    adicionarSelect('diretor', 'Diretor', content);
 
     $('<div class="form-group"><label>Atores</label><select name="atores" multiple class="form-control" id="atores"></select></div>').appendTo(content);
 
@@ -110,7 +115,7 @@ function formularioItem() {
     $('<div class="form-group"><label for="id">Número de Série</label><input name="numSerie" type="number" class="form-control" id="id"></div>').appendTo(content);
     $('<div class="form-group"><label for="dtAquisicao">Data de aquisição</label><input name="dataAquisicao" type="date" class="form-control" id="dtAquisicao"></div>').appendTo(content);
     $('<div class="form-group"><label for="tpItem">Tipo</label><input type="text" name="tipoItem" class="form-control" id="tpItem"></div>').appendTo(content);
-    adicionarSelect("titulo", "Título");
+    adicionarSelect("titulo", "Título", content);
 
     var select = $('#titulo');
     var arrayItens = JSON.parse(localStorage.getItem('titulo'));
@@ -147,8 +152,6 @@ function salvarObj(){
 }
 
 function valorCheck(){
-    // $('#estaAtivo').prop('required', false);
-    // $('#isDependente').prop('required', false);
     $('#isDependente').is(':checked') ? 
         (function() {
             $('#formSocio :input')
@@ -180,8 +183,8 @@ function formularioCliente(){
     $('<div class="form-group"><label for="id">Número de Inscrição</label><input type="number" name="id" class="form-control" id="id"></div>').appendTo(content);
     $('<div class="form-group"><label for="nome">Nome</label><input type="text" class="form-control" name="estanomeAtivo" id="nome"></div>').appendTo(content);
     $('<div class="form-group"><label for="dtNascimento">Data de nascimento</label><input type="date" name="dtNascimento" class="form-control" id="dtNascimento"></div>').appendTo(content);
-    adicionarSelect('socio', 'Sócio')
-    adicionarSelect('sexo', 'Sexo');
+    adicionarSelect('socio', 'Sócio', content)
+    adicionarSelect('sexo', 'Sexo', content);
     $('<div class="form-group"><label for="isDependente">Dependente?</label><input onclick="valorCheck()" type="checkbox" class="form-control" name="isDependente" id="isDependente"></div>').appendTo(content);
     
     $('<div id="formSocio"><div class="form-group"><label for="cpf">CPF</label><input type="number" class="form-control" name="cpf" id="cpf"></div>'+
@@ -193,6 +196,42 @@ function formularioCliente(){
     popularSelect(arrayItens, select);
     popularSelect([{id:'masculino', nome:'Masculino'}, {id:'feminino', nome:'Feminino'},{id:'outros', nome:'Outros'}], $('#sexo'));
     valorCheck();
+}
+
+function adicionarItemTabela(obj){
+    console.log(obj)
+    $(`<tr> <td>${obj.id}</td> <td>${obj.titulo.nome}</td> <td>${obj.status}</td> <td><button type="button" class="btn btn-info" onclick="abrirModal(${obj.id})">Alocar</button></td> </tr>`).appendTo($('#bodyTable'));
+}
+
+function abrirModal(obj){
+    console.log(obj)
+    $('#formLocacao').show();
+    $('#divBotoes').show();
+}
+
+function popularTabela(arrayItens){
+    arrayItens.forEach(element => {
+        adicionarItemTabela(element);
+    })
+}
+
+function formularioLocacao(){
+    $('<h1>Locar Item</h1>').appendTo(content);
+
+    $(`<div id="formLocacao"><div class="form-group"><label for="id">Num Série</label><input type="number" name="id" class="form-control" id="id"></div>` +
+    '<div class="form-group"><label for="estaAtivo">Valor R$</label><input type="number" name="valor" class="form-control" id="valor"></div>'+
+    '<div class="form-group"><label for="estaAtivo">Data Devolução</label><input type="date" name="data" class="form-control" id="dataDevolucao"></div>'+
+    '<div class="form-group"><label for="estaAtivo">Multa R$</label><input type="number" name="multa" class="form-control" id="multa"></div></div>').appendTo(content);
+    adicionarSelect('cliente', 'Cliente', $('#formLocacao'));
+    
+    $('<table class="table">'+
+    '<thead class="thead-dark">'+
+        '<tr> <th id="id" scope="col">Num Série</th> <th id="titulo" scope="col">Título</th> <th id="status" scope="col">Status</th> <th id="op" scope="col"></th> </tr>'+
+    '</thead> <tbody id="bodyTable"></tbody>').appendTo(content);
+
+    const vetorItens = JSON.parse(localStorage.getItem('item'));
+    popularTabela(vetorItens);
+    $('#formLocacao').hide()
 }
 
 function getValue(){
@@ -256,7 +295,8 @@ function getItemValue(){
         id: $('#id').val(),
         dtAquisicao: $('#dtAquisicao').val(),
         tpItem: $('#tpItem').val(),
-        titulo: buscarPorId($('#titulo').val(), 'titulo')
+        titulo: buscarPorId($('#titulo').val(), 'titulo'),
+        status: 'Disponível'
     }
     return item;
 }
@@ -285,7 +325,6 @@ function buscarPorId(id, obj){
 
 function buscarLista(vetor, obj){
     const vetorAux = [];
-    console.log(vetor);
     vetor.forEach(element => {
         vetorAux.push(buscarPorId(element, obj));
     })
