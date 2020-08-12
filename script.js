@@ -147,14 +147,25 @@ function salvarObj(){
 }
 
 function valorCheck(){
-    $('#formSocio :input').prop("disabled", !($('#isSocio').is(':checked')));
+
+    $('#isDependente').is(':checked') ? 
+        (function() {
+            $('#formSocio :input')
+                .val('')
+                .prop('checked', false)
+                .prop('required', false)
+                .prop('selected', false);
+            $('#formSocio :input').prop("disabled", true);
+            $('#socio').prop("disabled", false).prop("required", true);
+        }()) 
+        : 
+        (function() {
+            $('#formSocio :input').prop("disabled", false);
+            $('#socio').prop("disabled", true).prop("required", false).val('');
+        }())
+
 }
 
-function limitarDependente(){
-    var total = $('#multiselectDependentes :selected').length;
-
-    return total > 3 ?  $('#btnSalvar').prop('disabled', true) : $('#btnSalvar').prop('disabled', false);;
-}
 
 function limparCampos(){
     $('#form, :input')
@@ -165,20 +176,19 @@ function limparCampos(){
 
 function formularioCliente(){
     $('<h1>Cadastro Cliente</h1>').appendTo(content);
-    $('<div class="form-group"><label for="numInscricao">Número de Inscrição</label><input type="number" class="form-control" id="numInscricao"></div>').appendTo(content);
-    $('<div class="form-group"><label for="nomeCliente">Nome</label><input type="text" class="form-control" id="nomeCliente"></div>').appendTo(content);
-    $('<div class="form-group"><label for="dtNascimento">Data de nascimento</label><input type="date" class="form-control" id="dtNascimento"></div>').appendTo(content);
-    adicionarSelect('selectSexo', 'Sexo');
     $('<div class="form-group"><label for="estaAtivo">Está ativo?</label><input type="checkbox" class="form-control" id="estaAtivo"></div>').appendTo(content);
-    $('<div class="form-group"><label for="isSocio">Sócio</label><input onclick="valorCheck()" type="checkbox" class="form-control" id="isSocio"></div>').appendTo(content);
+    $('<div class="form-group"><label for="numInscricao">Número de Inscrição</label><input type="number" class="form-control" id="id"></div>').appendTo(content);
+    $('<div class="form-group"><label for="nomeCliente">Nome</label><input type="text" class="form-control" id="nome"></div>').appendTo(content);
+    $('<div class="form-group"><label for="dtNascimento">Data de nascimento</label><input type="date" class="form-control" id="dtNascimento"></div>').appendTo(content);
+    adicionarSelect('socio', 'Sócio')
+    adicionarSelect('sexo', 'Sexo');
+    $('<div class="form-group"><label for="isDependente">Dependente?</label><input onclick="valorCheck()" type="checkbox" class="form-control" id="isDependente"></div>').appendTo(content);
     
     $('<form id="formSocio"><div class="form-group"><label for="cpf">CPF</label><input type="number" class="form-control" id="cpf"></div>'+
     '<div class="form-group"><label for="endereco">Endereço</label><input type="text" class="form-control" id="endereco"></div>' +
-    '<div class="form-group"><label for="tel">Telefone</label><input type="tel" class="form-control" id="tel"></div>' +
-    '<div class="form-group"><label>Dependentes</label><select onchange="limitarDependente()" multiple class="form-control" id="multiselectDependentes"></select></div></form>').appendTo(content);
+    '<div class="form-group"><label for="tel">Telefone</label><input type="tel" class="form-control" id="tel"></div></form>').appendTo(content);
     
-    popularSelect(['Masculino', 'Feminino', 'Outros'], $('#selectSexo'));
-    popularSelect(['João Pedro', 'Kaio Binda', 'Arthur', 'Chrystian', 'Jean', 'Alisson'], $('#multiselectDependentes'));
+    popularSelect([{id:'masculino', nome:'Masculino'}, {id:'feminino', nome:'Feminino'},{id:'outros', nome:'Outros'}], $('#sexo'));
     valorCheck();
 }
 
@@ -193,7 +203,9 @@ function getValue(){
         case 'item':
             return getItemValue();
         case 'titulo':
-            return getTituloValue();      
+            return getTituloValue();   
+        case 'cliente':
+            return getClienteValue();   
     }
 }
 
@@ -244,6 +256,24 @@ function getItemValue(){
         titulo: buscarPorId($('#titulo').val(), 'titulo')
     }
     return item;
+}
+
+function getClienteValue(){
+    const cliente = {
+        id: $('#id').val(),
+        nome: $('#nome').val(),
+        dtNascimento: $('#dtNascimento').val(),
+        nome: $('#nome').val(),
+        socio: buscarPorId($('#socio').val(), 'cliente'),
+        sexo: $('#sexo').val(),
+        cpf: $('#cpf').val(),
+        endereco: $('#endereco').val(),
+        telefone: $('#telefone').val(),
+        estaAtivo: $('#estaAtivo').is(':checked'),
+        isDependente: $('#ativo').is(':checked')
+    }
+    console.log(cliente)
+    return cliente;
 }
 
 function buscarPorId(id, obj){

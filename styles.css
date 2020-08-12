@@ -4,6 +4,10 @@
     justify-content: center;
 }
 
+body {
+    background-color: #ced8e4;
+}
+
 #form {
     margin-top: 20px;
     border: 1px solid gray;
