@@ -39,7 +39,16 @@ function limparFormulário(obj){
 }
 
 function criarBotoes(){
-    (formAtual != 'locacao') && function(){
+    return formAtual == 'locacao' ? 
+    function(){
+        $('<div id="divBotoes" class="divBotoes">'+
+        `<button type="button" id="btnBuscar" onclick="buscarItem($('#id').val())" class="btn btn-warning">Buscar</button>`+
+        '<button type="button" id="btnCancelar" onclick="limparCampos()" class="btn btn-danger">Cancelar</button>'+
+        '<button type="button" id="btnSalvar" onclick="salvarLocacao()" class="btn btn-success">Salvar</button>'+
+        '</div>'
+        ).appendTo(content);
+    }() : 
+    function(){
         $('<div id="divBotoes" class="divBotoes">'+
         '<button type="button" id="btnExcluir" onclick="excluirObj()" class="btn btn-secondary">Excluir</button>'+
         '<button type="button" id="btnBuscar" onclick="buscarObj()" class="btn btn-warning">Buscar</button>'+
@@ -199,14 +208,49 @@ function formularioCliente(){
 }
 
 function adicionarItemTabela(obj){
-    console.log(obj)
-    $(`<tr> <td>${obj.id}</td> <td>${obj.titulo.nome}</td> <td>${obj.status}</td> <td><button type="button" class="btn btn-info" onclick="abrirModal(${obj.id})">Alocar</button></td> </tr>`).appendTo($('#bodyTable'));
+    $(`<tr> <td>${obj.id}</td> <td>${obj.titulo.nome}</td> <td>${obj.status}</td> <td><button type="button" class="btn btn-info" onclick="buscarItem(${parseInt(obj.id)})">Alocar</button></td> </tr>`).appendTo($('#bodyTable'));
 }
 
-function abrirModal(obj){
-    console.log(obj)
-    $('#formLocacao').show();
-    $('#divBotoes').show();
+function buscarItem(obj){
+    const vetor = JSON.parse(localStorage.getItem('item'));
+    const item = vetor.find(element => {
+        return element.id == obj;
+    })
+    $('#valor').val(item.titulo.classe.valorClasse);
+    var now = new Date();
+    now.setDate(now.getDate() + parseInt(item.titulo.classe.prazoDevolucao));
+    const data = now.getFullYear() + '-' + ("0" + (now.getMonth() + 1)).slice(-2) +  '-' + ("0" + now.getDate()).slice(-2);
+    $('#dataDevolucao').val(data);
+    preencherFormulario(item);
+}
+
+function salvarLocacao(){
+    var item = buscarPorId($('#id').val(), 'item');
+    const now = new Date();
+    const data = now.getFullYear() + '-' + ("0" + (now.getMonth() + 1)).slice(-2) +  '-' + ("0" + now.getDate()).slice(-2);
+    
+    item.status == 'Disponível' ? 
+    function(){
+        item.cliente = buscarPorId($('#cliente').val(), 'cliente');
+        item.status = 'Locado';
+        item.dataDevolucao = $('#dataDevolucao').val();
+    }() : 
+    function(){
+        item.multa = $('#multa').val();
+        item.status = 'Disponível';
+        item.cliente = '';
+        item.dataDevolucao = data;
+    }();
+
+    var vetor = JSON.parse(localStorage.getItem('item'));
+    const pos = vetor.find(element => {
+        return parseInt(element.id) == parseInt(item.id) ;
+    })
+    
+    pos ? vetor[vetor.indexOf(pos)] = item : vetor.push(item);
+
+    localStorage.setItem('item', JSON.stringify(vetor));
+    limparCampos(); 
 }
 
 function popularTabela(arrayItens){
@@ -218,11 +262,11 @@ function popularTabela(arrayItens){
 function formularioLocacao(){
     $('<h1>Locar Item</h1>').appendTo(content);
 
-    $(`<div id="formLocacao"><div class="form-group"><label for="id">Num Série</label><input type="number" name="id" class="form-control" id="id"></div>` +
-    '<div class="form-group"><label for="estaAtivo">Valor R$</label><input type="number" name="valor" class="form-control" id="valor"></div>'+
-    '<div class="form-group"><label for="estaAtivo">Data Devolução</label><input type="date" name="data" class="form-control" id="dataDevolucao"></div>'+
-    '<div class="form-group"><label for="estaAtivo">Multa R$</label><input type="number" name="multa" class="form-control" id="multa"></div></div>').appendTo(content);
-    adicionarSelect('cliente', 'Cliente', $('#formLocacao'));
+    adicionarSelect('cliente', 'Cliente', content);
+    $(`<div class="form-group"><label for="id">Num Série</label><input type="number" name="id" class="form-control" id="id"></div>` +
+    '<div class="form-group"><label for="valor">Valor R$</label><input type="number" name="valor" class="form-control" id="valor"></div>'+
+    '<div class="form-group"><label for="dataDevolucao">Data Devolução</label><input type="date" name="data" class="form-control" id="dataDevolucao"></div>'+
+    '<div class="form-group"><label for="multa">Multa R$</label><input type="number" name="multa" class="form-control" id="multa"></div>').appendTo(content);
     
     $('<table class="table">'+
     '<thead class="thead-dark">'+
@@ -230,8 +274,9 @@ function formularioLocacao(){
     '</thead> <tbody id="bodyTable"></tbody>').appendTo(content);
 
     const vetorItens = JSON.parse(localStorage.getItem('item'));
+    const vetorClientes = JSON.parse(localStorage.getItem('cliente'));
+    popularSelect(vetorClientes, $('#cliente'));
     popularTabela(vetorItens);
-    $('#formLocacao').hide()
 }
 
 function getValue(){
@@ -296,7 +341,9 @@ function getItemValue(){
         dtAquisicao: $('#dtAquisicao').val(),
         tpItem: $('#tpItem').val(),
         titulo: buscarPorId($('#titulo').val(), 'titulo'),
-        status: 'Disponível'
+        status: 'Disponível',
+        dataDevolucao: '',
+        cliente: ''
     }
     return item;
 }
@@ -355,10 +402,10 @@ function excluirObj(){
 }
 
 function preencherFormulario(obj){
-    
     Object.keys(obj).forEach(function(item){
         obj[item] && function(){
             if(obj[item].id){
+                console.log($(`${obj[item].id}`))                
                 $(`#${item} option:contains(${obj[item].id})`).prop('selected', true);
             }
             else if(typeof obj[item] === 'boolean'){
