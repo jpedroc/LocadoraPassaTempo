@@ -405,7 +405,6 @@ function preencherFormulario(obj){
     Object.keys(obj).forEach(function(item){
         obj[item] && function(){
             if(obj[item].id){
-                console.log($(`${obj[item].id}`))                
                 $(`#${item} option:contains(${obj[item].id})`).prop('selected', true);
             }
             else if(typeof obj[item] === 'boolean'){
