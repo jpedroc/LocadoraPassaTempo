@@ -1,0 +1,7 @@
+controller/AtorController.class
+model/domain/Ator.class
+model/domain/Titulo.class
+model/domain/Classe.class
+model/application/AplCadastrarAtor.class
+model/domain/HibernateUtil.class
+model/domain/Diretor.class

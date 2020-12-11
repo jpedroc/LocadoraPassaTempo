@@ -1,0 +1,22 @@
+.divBotoes{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    background-color: #ced8e4;
+}
+
+#form {
+    margin-top: 20px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+#form h1 {
+    text-align: center;
+}
+.divBotoes button{
+    margin: 5px;
+}
