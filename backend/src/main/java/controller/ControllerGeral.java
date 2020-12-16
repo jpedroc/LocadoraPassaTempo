@@ -1,10 +1,10 @@
 package controller;
 
+import com.google.gson.Gson;
 import model.application.AplAtor;
 import model.application.AplClasse;
 import model.application.AplDiretor;
 import model.application.AplTitulo;
-import org.apache.commons.lang3.ObjectUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/ControllerGeral")
+@WebServlet("/ControllerGeral/*")
 public class ControllerGeral extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
@@ -22,12 +23,51 @@ public class ControllerGeral extends HttpServlet {
         super();
     }
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        String classe = request.getParameter("classe");
+
+        switch (classe) {
+            case "diretor":
+                List diretores = AplDiretor.getDiretores();
+                request.setAttribute("diretores", diretores);
+                try {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(new Gson().toJson(diretores));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "ator":
+                List atores = AplAtor.getAtores();
+                request.setAttribute("atores", atores);
+                try {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(new Gson().toJson(atores));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "classe":
+                List classes = AplClasse.getClasses();
+                request.setAttribute("classes", classes);
+                try {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(new Gson().toJson(classes));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+
+    }
+
     /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        //response.getWriter().append("Served at: ").append(request.getContextPath());
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         //Receber o valor do atributo da operação a ser realizada
         String op = request.getParameter("operacao");

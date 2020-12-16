@@ -1,12 +1,16 @@
 package model.application;
 
-import model.domain.Ator;
 import model.domain.Diretor;
 import model.domain.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class AplDiretor {
 
@@ -31,6 +35,14 @@ public class AplDiretor {
     public static Diretor buscarDiretor(Long id) {
         Session s = HibernateUtil.getSession().openSession();
         return s.get(Diretor.class, id);
+    }
+
+    public static List<Diretor> getDiretores(){
+        SessionFactory sessions = HibernateUtil.getSession();
+        Session s = sessions.openSession();
+
+        List listDiretores = s.createQuery("from Diretor").list();
+        return listDiretores;
     }
 
     public static int incluir(String nome){

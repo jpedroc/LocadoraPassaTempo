@@ -1,7 +1,10 @@
 /home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/domain/Classe.java
-/home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/controller/AtorController.java
-/home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/application/AplCadastrarAtor.java
+/home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/application/AplClasse.java
+/home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/application/AplAtor.java
+/home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/controller/ControllerGeral.java
+/home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/application/AplTitulo.java
 /home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/domain/Diretor.java
+/home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/application/AplDiretor.java
 /home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/domain/HibernateUtil.java
 /home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/domain/Ator.java
 /home/jpedroc/Documentos/Trabalhos/LocadoraPassaTempo/backend/src/main/java/model/domain/Titulo.java

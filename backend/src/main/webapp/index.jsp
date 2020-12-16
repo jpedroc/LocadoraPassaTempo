@@ -1,4 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="java.util.List"%>
+<%@ page import="org.hibernate.Session"%>
+<%@ page import="org.hibernate.SessionFactory"%>
+<%@ page import="model.domain.HibernateUtil"%>
+<%@ page import="model.application.AplDiretor"%>
+<%@ page import="model.application.AplClasse"%>
+<%@ page import="model.application.AplAtor"%>
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -38,7 +46,7 @@
     </div>
 </nav>
 
-<form method="GET" action="ControllerGeral" class="container-sm" id="form">
+<form method="POST" action="ControllerGeral" class="container-sm" id="form">
 </form>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>

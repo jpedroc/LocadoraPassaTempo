@@ -70,10 +70,12 @@ function excluirObj() {
     limparCampos();
 }
 
-function popularSelect(arrayItens, obj){
-    arrayItens.forEach((item) => {
-        obj.append(`<option value="${item.id}">` + item.nome + '</option>');
-    })
+function popularSelect(obj, classe){
+    $.get(`ControllerGeral/?classe=${classe}`).done(function(element) {
+        element.forEach((item) => {
+            obj.append(`<option value="${item.id}">` + item.nome + '</option>');
+        })
+    });
 }
 
 function adicionarSelect(id, label, div){
@@ -106,6 +108,7 @@ function formularioDiretor() {
 }
 
 function formularioTitulo() {
+
     $('<h1>Título</h1>').appendTo(content);
     $('<div class="form-group"><label for="idTitulo">ID</label><input name="idTitulo" type="number" class="form-control" id="id"></div>').appendTo(content);
     $('<div class="form-group"><label for="nomeTitulo">Nome</label><input name="nomeTitulo" type="text" class="form-control" id="nome"></div>').appendTo(content);
@@ -120,13 +123,10 @@ function formularioTitulo() {
     var selectClasse = $('#classe');
     var selectDiretor = $('#diretor');
     var selectAtor = $('#atores');
-    var listaClasse = JSON.parse(localStorage.getItem('classe'));
-    var listaDiretor = JSON.parse(localStorage.getItem('diretor'));
-    var listaAtores = JSON.parse(localStorage.getItem('ator'));
 
-    popularSelect([{id: 1, nome: "Comum"}], selectClasse);
-    popularSelect([{id: 1, nome: "Flavio Jr"}], selectDiretor);
-    popularSelect([{id: 1, nome: "Flavio Jr"},{id: 2, nome: "Flavio Jr"},{id: 3, nome: "Flavio Jr"}], selectAtor);
+    popularSelect(selectClasse, "classe");
+    popularSelect( selectDiretor, "diretor");
+    popularSelect(selectAtor, "ator");
 
 }
 

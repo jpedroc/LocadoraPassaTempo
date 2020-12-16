@@ -8,6 +8,8 @@ import org.hibernate.Transaction;
 import model.domain.Ator;
 import model.domain.HibernateUtil;
 
+import java.util.List;
+
 public class AplAtor {
 
 	public static int ERRO_NOMEINVALIDO = 1;
@@ -118,4 +120,12 @@ public class AplAtor {
 			session.close();
 		}
 	}
+
+    public static List getAtores() {
+		SessionFactory sessions = HibernateUtil.getSession();
+		Session s = sessions.openSession();
+
+		List listAtores = s.createQuery("from Ator").list();
+		return listAtores;
+    }
 }

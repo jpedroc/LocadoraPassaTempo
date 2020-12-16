@@ -8,6 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import java.util.List;
+
 public class AplClasse {
     public static int ERRO_NOMEINVALIDO = 1;
     public static int ERRO_VALORINVALIDO = 2;
@@ -122,5 +124,13 @@ public class AplClasse {
         } finally {
             session.close();
         }
+    }
+
+    public static List getClasses() {
+        SessionFactory sessions = HibernateUtil.getSession();
+        Session s = sessions.openSession();
+
+        List listClasses = s.createQuery("from Classe").list();
+        return listClasses;
     }
 }
