@@ -60,6 +60,17 @@ public class ControllerGeral extends HttpServlet {
                     e.printStackTrace();
                 }
                 break;
+            case "titulo":
+                List titulos = AplTitulo.getTitulos();
+                request.setAttribute("titulos", titulos);
+                try {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(new Gson().toJson(titulos));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
     }
@@ -89,14 +100,14 @@ public class ControllerGeral extends HttpServlet {
                 String nome = request.getParameter("nomeTitulo");
                 String idDir = request.getParameter("diretor");
                 String idClasse1 = request.getParameter("classe");
-                String[] idAtores = request.getParameterValues("atores");
+                String[] atores = request.getParameterValues("atores");
                 AplTitulo.dicidirAcao(
                         op,
                         verificarString(id),
                         nome,
                         verificarString(idDir),
                         verificarString(idClasse1),
-                        null
+                        atores
                 );
                 break;
 
@@ -122,14 +133,15 @@ public class ControllerGeral extends HttpServlet {
                         verificarString(prazo));
                 break;
         }
+        response.sendRedirect("http://localhost:8080/backend_war_exploded/");
     }
 
     private Long verificarString(String num) {
-        return num != null && num.isEmpty() ? 0l : Long.valueOf(num);
+        return num != null && !num.isEmpty() ? Long.valueOf(num) : 0l;
     }
 
     private Double verificarStringD(String num) {
-        return num != null && num.isEmpty() ? 0.0 : Double.valueOf(num);
+        return num != null && !num.isEmpty() ? Double.valueOf(num) : 0.0;
     }
 
 }

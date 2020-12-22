@@ -17,6 +17,10 @@ public class Ator {
 	public Ator(){
 	}
 
+	public Ator(Long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}

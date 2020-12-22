@@ -1,7 +1,6 @@
 package model.application;
 
 import model.domain.Ator;
-import model.domain.Classe;
 import model.domain.HibernateUtil;
 import model.domain.Titulo;
 import org.hibernate.HibernateException;
@@ -9,17 +8,20 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AplTitulo {
 
-    public static void dicidirAcao(String acao, Long id, String nome, Long idDiretor, Long idClasse, List<Long> idAtores) {
+    public static void dicidirAcao(String acao, Long id, String nome, Long idDiretor, Long idClasse, String[] idAtores) {
         switch (acao) {
             case "novo":
-                incluir(nome, idDiretor, idClasse, idAtores);
+                incluir(nome, idDiretor, idClasse, toArrayLong(idAtores));
                 break;
             case "alterar":
-                alterar(id, nome, idDiretor, idClasse, idAtores);
+                alterar(id, nome, idDiretor, idClasse, toArrayLong(idAtores));
                 break;
             case "excluir":
                 excluir(id);
@@ -31,12 +33,21 @@ public class AplTitulo {
         return s.get(Titulo.class, id);
     }
 
+    private static List<Long> toArrayLong(String[] ids) {
+        List<Long> longs = new ArrayList<>();
+        Arrays.stream(ids).forEach(element -> {
+            longs.add(Long.valueOf(element));
+        });
+        return longs;
+    }
+
     public static int incluir(String nome, Long idDiretor, Long idClasse, List<Long> idAtores) {
         Titulo a = new Titulo();
         a.setNome(nome);
         a.setDiretor(AplDiretor.buscarDiretor(idDiretor));
         a.setClasse(AplClasse.buscarClasse(idClasse));
-        a.setAtores((List<Ator>) idAtores.stream().map(element -> AplAtor.buscarAtor(element)));
+        List<Ator> atores = (List<Ator>) idAtores.stream().map(Ator::new).collect(Collectors.toList());
+        a.setAtores(atores);
 
         SessionFactory sessions =  HibernateUtil.getSession();
         Session session = sessions.openSession();
@@ -66,7 +77,7 @@ public class AplTitulo {
         a.setNome(nome);
         a.setDiretor(AplDiretor.buscarDiretor(idDiretor));
         a.setClasse(AplClasse.buscarClasse(idClasse));
-        a.setAtores((List<Ator>) idAtores.stream().map(element -> AplAtor.buscarAtor(element)));
+        a.setAtores(null);
 
         SessionFactory sessions =  HibernateUtil.getSession();
         Session session = sessions.openSession();
@@ -74,6 +85,9 @@ public class AplTitulo {
 
         try {
             t = session.beginTransaction();
+            session.update(a);
+            List<Ator> atores = idAtores.stream().map(Ator::new).collect(Collectors.toList());
+            a.setAtores(atores);
             session.update(a);
             t.commit();
 
@@ -92,16 +106,15 @@ public class AplTitulo {
     }
 
     public static int excluir(Long id) {
-        Titulo a = buscarTitulo(id);
         SessionFactory sessions =  HibernateUtil.getSession();
         Session session = sessions.openSession();
         Transaction t = null;
 
         try {
             t = session.beginTransaction();
+            Titulo a = session.get(Titulo.class, id);
             session.delete(a);
             t.commit();
-
             return 1;
         }catch (HibernateException he) {
             t.rollback();
@@ -114,5 +127,13 @@ public class AplTitulo {
         } finally {
             session.close();
         }
+    }
+
+    public static List getTitulos() {
+        SessionFactory sessions = HibernateUtil.getSession();
+        Session s = sessions.openSession();
+
+        List listTitulos = s.createQuery("from Titulo ").list();
+        return listTitulos;
     }
 }

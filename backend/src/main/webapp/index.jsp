@@ -1,11 +1,4 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="java.util.List"%>
-<%@ page import="org.hibernate.Session"%>
-<%@ page import="org.hibernate.SessionFactory"%>
-<%@ page import="model.domain.HibernateUtil"%>
-<%@ page import="model.application.AplDiretor"%>
-<%@ page import="model.application.AplClasse"%>
-<%@ page import="model.application.AplAtor"%>
 
 <head>
     <meta charset="UTF-8">

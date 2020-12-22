@@ -5,18 +5,23 @@ let xhr = new XMLHttpRequest();
 function gerarFormulario(obj) {
     (obj != formAtual) && function() {
         limparFormulario(formAtual);
+        formAtual = obj;
         switch(obj){
             case 'ator':
                 formularioAtor();
+                tabelaAtor();
                 break;
             case 'classe':
                 formularioClasse();
+                tabelaClasse();
                 break;
             case 'diretor':
                 formularioDiretor();
+                tabelaDiretor();
                 break;
             case 'titulo':
                 formularioTitulo();
+                tabelaTitulo();
                 break;
             case 'item':
                 formularioItem();
@@ -29,7 +34,6 @@ function gerarFormulario(obj) {
                 break;
         }
         tornarCamposObrigatorios();
-        formAtual = obj;
         criarBotoes();
     }();
 }
@@ -53,7 +57,6 @@ function criarBotoes(){
     function(){
         $('<div id="divBotoes" class="divBotoes">'+
         '<button type="button" id="btnExcluir" onclick="excluirObj()" class="btn btn-secondary">Excluir</button>'+
-        '<button type="button" id="btnBuscar" class="btn btn-warning">Buscar</button>'+
         '<button type="button" id="btnCancelar" onclick="limparCampos()" class="btn btn-danger">Cancelar</button>'+
         '<button type="button" id="btnSalvar" onclick="salvarObj()" class="btn btn-success">Salvar</button>'+
         '</div>'
@@ -95,16 +98,63 @@ function formularioClasse() {
     $('<div class="form-group"><label for="prazoDevolucao">Prazo para devolução</label><input name="prazoClasse" type="number" class="form-control" id="prazoClasse"></div>').appendTo(content);
 }
 
+function tabelaClasse() {
+    $.get(`ControllerGeral/?classe=${formAtual}`).done(function(element) {
+        $('<table class="table">' +
+            '<thead class="thead-dark">' +
+                '<tr><th>ID</th>' +
+                '<th>Nome</th>' +
+                '<th>Valor</th>' +
+                '<th>Prazo</th>' +
+            '</tr></thead>' +
+            '<tbody id="tabelaClasse"></tbody></table>').appendTo(content);
+        var obj1 = $('#tabelaClasse');
+        element.forEach((classe) => {
+            obj1.append(`<tr><td>${classe.id}</td><td>${classe.nome}</td><td>${classe.valor}</td><td>${classe.prazoDevolucao}</td></tr>`);
+        })
+    });
+}
+
 function formularioAtor() {
     $('<h1>Ator</h1>').appendTo(content);
     $('<div class="form-group"><label for="idAtor">ID</label><input type="number" name="id" class="form-control" id="id"></div>').appendTo(content);
     $('<div class="form-group"><label for="nomeAtor">Nome</label><input type="text" name="nome" class="form-control" id="nome"></div>').appendTo(content);
 }
 
+function tabelaAtor() {
+    $.get(`ControllerGeral/?classe=${formAtual}`).done(function(element) {
+        $('<table class="table">' +
+            '<thead class="thead-dark">' +
+                '<tr><th>ID</th>' +
+                '<th>Nome</th></tr>' +
+            '</thead>' +
+            '<tbody id="tabelaAtor"></tbody></table>').appendTo(content);
+        var obj = $('#tabelaAtor');
+        element.forEach((item) => {
+            obj.append(`<tr><td>${item.id}</td><td>${item.nome}</td></tr>`);
+        })
+    });
+}
+
 function formularioDiretor() {
     $('<h1>Direto</h1>').appendTo(content);
     $('<div class="form-group"><label for="idDiretor">ID</label><input name="idDiretor" type="number" class="form-control" id="id"></div>').appendTo(content);
     $('<div class="form-group"><label for="nomeDiretor">Nome</label><input name="nomeDiretor" type="text" class="form-control" id="nome"></div>').appendTo(content);
+}
+
+function tabelaDiretor() {
+    $.get(`ControllerGeral/?classe=${formAtual}`).done(function(element) {
+        $('<table class="table">' +
+            '<thead class="thead-dark">' +
+                '<tr><th>ID</th>' +
+                '<th>Nome</th></tr>' +
+            '</thead>' +
+            '<tbody id="tabelaDiretor"></tbody></table>').appendTo(content);
+        var obj = $('#tabelaDiretor');
+        element.forEach((item) => {
+            obj.append(`<tr><td>${item.id}</td><td>${item.nome}</td></tr>`)
+        })
+    });
 }
 
 function formularioTitulo() {
@@ -128,6 +178,34 @@ function formularioTitulo() {
     popularSelect( selectDiretor, "diretor");
     popularSelect(selectAtor, "ator");
 
+}
+
+function tabelaTitulo() {
+    $.get(`ControllerGeral/?classe=${formAtual}`).done(function(element) {
+        $('<table class="table">' +
+            '<thead class="thead-dark">' +
+            '<tr><th>ID</th>' +
+            '<th>Nome</th>' +
+            '<th>Categoria</th>' +
+            '<th>Diretor</th>' +
+            '<th>Classe</th>' +
+            '<th>Atores</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody id="tabelaDiretor"></tbody></table>').appendTo(content);
+        var obj = $('#tabelaDiretor');
+        element.forEach((item) => {
+            obj.append(`<tr><td>${item.id}</td><td>${item.nome}</td><td>${item.categoria}</td><td>${item.diretor.nome}</td><td>${item.classe.nome}</td><td>${getNomeAtores(item.atores)}</td></tr>`)
+        })
+    });
+}
+
+function getNomeAtores(atores) {
+    var nomes = '';
+    atores.forEach(ator => {
+        nomes += ator.nome + '\n';
+    })
+    return nomes;
 }
 
 function formularioItem() {
@@ -274,92 +352,6 @@ function formularioLocacao(){
     const vetorClientes = JSON.parse(localStorage.getItem('cliente'));
     popularSelect(vetorClientes, $('#cliente'));
     popularTabela(vetorItens);
-}
-
-function getValue(){
-    switch(formAtual){
-        case 'ator':
-            return getAtorValue();
-        case 'classe':
-            return getClasseValue();
-        case 'diretor':
-            return getDiretorValue();
-        case 'item':
-            return getItemValue();
-        case 'titulo':
-            return getTituloValue();   
-        case 'cliente':
-            return getClienteValue();   
-    }
-}
-
-function getTituloValue() {
-    const ator = {
-        id:$('#id').val(),
-        nome:$('#nome').val(),
-        categoria:$('#categoria').val(),
-        sinopse:$('#sinopse').val(),
-        classe:buscarPorId($('#classe').val(), 'classe'),
-        diretor:buscarPorId($('#diretor').val(), 'diretor'),
-        atores:buscarLista($('#atores').val(), 'ator')
-    }
-    return ator;
-}
-
-function getAtorValue(){
-    var ator = {
-        id: $('#id').val(),
-        nome: $('#nome').val()
-    }
-    return ator;
-}
-
-function getDiretorValue(){
-    const diretor = {
-        id: $('#id').val(),
-        nome:$('#nome').val()
-    }
-    return diretor;
-}
-
-function getClasseValue(){
-    const classe = {
-        id:$('#id').val(),
-        nome:$('#nome').val(),
-        valorClasse:$('#valorClasse').val(),
-        prazoDevolucao:$('#prazoDevolucao').val()
-    }
-    return classe;
-}
-
-function getItemValue(){
-    const item = { 
-        id: $('#id').val(),
-        dtAquisicao: $('#dtAquisicao').val(),
-        tpItem: $('#tpItem').val(),
-        titulo: buscarPorId($('#titulo').val(), 'titulo'),
-        status: 'Disponível',
-        dataDevolucao: '',
-        cliente: ''
-    }
-    return item;
-}
-
-function getClienteValue(){
-    const cliente = {
-        id: $('#id').val(),
-        nome: $('#nome').val(),
-        dtNascimento: $('#dtNascimento').val(),
-        nome: $('#nome').val(),
-        socio: buscarPorId($('#socio').val(), 'cliente'),
-        sexo: $('#sexo').val(),
-        cpf: $('#cpf').val(),
-        endereco: $('#endereco').val(),
-        telefone: $('#telefone').val(),
-        estaAtivo: $('#estaAtivo').is(':checked'),
-        isDependente: $('#ativo').is(':checked')
-    }
-    return cliente;
 }
 
 function buscarPorId(id, obj){
